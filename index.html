@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giulio Degano | BioEng</title>
+  <meta name="description" content="My stuff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #0a0a0f;
+      color: #e8e8e8;
+      font-family: 'Space Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== HEADER / HERO ===== */
+    .header-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #0d0d14 0%, #0a0a0f 100%);
+    }
+
+    #neural-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+    }
+
+    .header-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(0deg, #0a0a0f 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .header-content {
+      position: absolute;
+      bottom: 15%;
+      left: 8%;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .header-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      color: #00ffd5;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding: 6px 12px;
+      border: 1px solid rgba(0, 255, 213, 0.3);
+      border-radius: 2px;
+    }
+
+    .header-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #ffffff 0%, #00ffd5 50%, #7b61ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .header-subtitle {
+      font-size: 1rem;
+      color: #6a6a7a;
+      letter-spacing: 0.05em;
+      max-width: 400px;
+      line-height: 1.6;
+    }
+
+    .header-cta {
+      margin-top: 30px;
+      pointer-events: auto;
+    }
+
+    .header-cta a {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: transparent;
+      border: 1px solid rgba(0, 255, 213, 0.5);
+      color: #00ffd5;
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      border-radius: 2px;
+    }
+
+    .header-cta a:hover {
+      background: rgba(0, 255, 213, 0.1);
+      border-color: #00ffd5;
+      box-shadow: 0 0 30px rgba(0, 255, 213, 0.2);
+    }
+
+    .stats-container {
+      position: absolute;
+      top: 30px;
+      right: 5%;
+      display: flex;
+      gap: 40px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .stat {
+      text-align: right;
+    }
+
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #00ffd5;
+    }
+
+    .stat-label {
+      font-size: 0.6rem;
+      color: #4a4a5a;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: #4a4a5a;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .scroll-indicator svg {
+      width: 20px;
+      height: 20px;
+      stroke: #4a4a5a;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(10, 10, 15, 0.9) 0%, transparent 100%);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #8a8a9a;
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #00ffd5;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section {
+      padding: 120px 8%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 60px;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      color: #00ffd5;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    .section-desc {
+      color: #6a6a7a;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      max-width: 600px;
+    }
+
+    /* ===== ABOUT ===== */
+    #about {
+      background: linear-gradient(180deg, #0a0a0f 0%, #0d0d14 50%, #0a0a0f 100%);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-text p {
+      color: #8a8a9a;
+      line-height: 1.9;
+      margin-bottom: 20px;
+    }
+
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .tech-tag {
+      padding: 8px 16px;
+      background: rgba(0, 255, 213, 0.05);
+      border: 1px solid rgba(0, 255, 213, 0.2);
+      border-radius: 2px;
+      font-size: 0.75rem;
+      color: #00ffd5;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== PROJECTS ===== */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+    }
+
+    .project-card {
+      background: rgba(20, 20, 30, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      padding: 40px;
+      transition: all 0.3s ease;
+    }
+
+    .project-card:hover {
+      border-color: rgba(0, 255, 213, 0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .project-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #00ffd5 0%, #7b61ff 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      font-size: 1.5rem;
+    }
+
+    .project-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .project-desc {
+      color: #6a6a7a;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .project-link {
+      color: #00ffd5;
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: gap 0.3s;
+    }
+
+    .project-link:hover {
+      gap: 12px;
+    }
+
+    /* ===== CONTACT ===== */
+    #contact {
+      text-align: center;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      background: rgba(20, 20, 30, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      color: #e8e8e8;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+
+    .contact-link:hover {
+      border-color: #00ffd5;
+      color: #00ffd5;
+    }
+
+    .contact-link svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      padding: 40px 8%;
+      text-align: center;
+      color: #4a4a5a;
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .stats-container {
+        gap: 20px;
+      }
+
+      .header-content {
+        left: 5%;
+        right: 5%;
+      }
+
+      .contact-links {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="#" class="nav-logo">GD</a>
+    <ul class="nav-links">
+      <li><a href="#about">About Me</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Header with Neural Network -->
+  <header class="header-container">
+    <canvas id="neural-canvas"></canvas>
+    <div class="header-overlay"></div>
+    
+    <div class="header-content">
+      <span class="header-tag">Biomedical engineer @ HUG</span>
+      <h1 class="header-title">Giulio Degano</h1>
+      <p class="header-subtitle">
+        Resercher in neuro stuff with a focus on EEG in critical care
+      </p>
+      <div class="header-cta">
+        <a href="#projects">
+          View Projects
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat">
+        <div class="stat-value" id="node-count"></div>
+        <!-- <div class="stat-label">Neurons</div> -->
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="connection-count"></div>
+        <!-- <div class="stat-label">Synapses</div> -->
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="avg-weight"></div>
+        <!-- <div class="stat-label">Avg Weight</div> -->
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- About Section -->
+  <section id="about" class="section">
+    <div class="about-grid">
+      <div class="section-header">
+        <p class="section-label">01 / About</p>
+        <h2 class="section-title">Working on clinical problems until AI will inevitably substitute me</h2>
+      </div>
+      <div class="about-text">
+        <p>
+          I'm a biomedical engineer. I like coding. I like data standardization. I do not like EEG with artifact.
+        </p>
+        <p>
+          Currently focused on project about EEG monitoring in critical care settings. Cognitive stuff also, but on the side.
+        </p>
+        <div class="tech-stack">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Matlab</span>
+          <span class="tech-tag">R</span>
+		  <span class="tech-tag">Vibing with my friend Claude</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="section">
+    <div class="section-header">
+      <p class="section-label">02 / Projects</p>
+      <h2 class="section-title">Selected Work</h2>
+      <p class="section-desc">
+        TBD
+      </p>
+    </div>
+
+    <div class="projects-grid">
+	
+      <article class="project-card">
+        <div class="project-icon">🧠</div>
+        <h3 class="project-title">TBD</h3>
+        <p class="project-desc">
+          TBD
+        </p>
+        <a href="#" class="project-link">
+          View Project
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </article>
+
+      <!-- <article class="project-card">
+        <div class="project-icon">⚡</div>
+        <h3 class="project-title">Project Two</h3>
+        <p class="project-desc">
+          Brief description of another project. Highlight what makes it 
+          interesting or unique.
+        </p>
+        <a href="#" class="project-link">
+          View Project
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </article>
+
+      <article class="project-card">
+        <div class="project-icon">🎨</div>
+        <h3 class="project-title">Project Three</h3>
+        <p class="project-desc">
+          Description of a creative or design-focused project. 
+          Show your range of skills.
+        </p>
+        <a href="#" class="project-link">
+          View Project
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </article> -->
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section">
+    <div class="section-header" style="max-width: 600px; margin: 0 auto;">
+      <p class="section-label">03 / Contact</p>
+      <h2 class="section-title">If you really want</h2>
+      <p class="section-desc" style="margin: 0 auto;">
+        Socials are the following
+      </p>
+    </div>
+
+    <div class="contact-links">
+      <a href="https://github.com/gDegano" class="contact-link" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        GitHub
+      </a>
+      <a href="https://linkedin.com/in/giuliodegano" class="contact-link" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+        LinkedIn
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Made in 2026 with some random marking:© ™ ®.</p>
+  </footer>
+
+  <!-- Neural Network Script -->
+  <script>
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let dpr = window.devicePixelRatio || 1;
+    let width, height;
+
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    const config = {
+      nodeCount: 150,
+      connectionRadius: 120,
+      hebbianRate: 0.012,
+      decayRate: 0.0015,
+      waveSpeed: 200,
+      waveDecay: 0.94,
+      minWeight: 0.05,
+      maxWeight: 1.0,
+      activationThreshold: 0.08
+    };
+
+    class Neuron {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.activation = 0;
+        this.targetActivation = 0;
+        this.baseRadius = 1.5 + Math.random() * 2;
+        this.phase = Math.random() * Math.PI * 2;
+        this.connections = new Map();
+      }
+
+      update(dt) {
+        this.activation += (this.targetActivation - this.activation) * 0.08;
+        this.targetActivation *= config.waveDecay;
+        this.phase += dt * 0.4;
+      }
+
+      draw() {
+        const pulse = Math.sin(this.phase) * 0.2 + 0.8;
+        const radius = this.baseRadius * (1 + this.activation * 2.5);
+        
+        if (this.activation > 0.08) {
+          const gradient = ctx.createRadialGradient(
+            this.x, this.y, 0,
+            this.x, this.y, radius * 5
+          );
+          gradient.addColorStop(0, `rgba(0, 255, 213, ${this.activation * 0.6})`);
+          gradient.addColorStop(0.4, `rgba(123, 97, 255, ${this.activation * 0.25})`);
+          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, radius * 5, 0, Math.PI * 2);
+          ctx.fillStyle = gradient;
+          ctx.fill();
+        }
+
+        const coreAlpha = 0.25 + this.activation * 0.75 + pulse * 0.1;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 255, 213, ${coreAlpha})`;
+        ctx.fill();
+      }
+    }
+
+    class Synapse {
+      constructor(from, to, weight) {
+        this.from = from;
+        this.to = to;
+        this.weight = weight;
+        this.signalPos = null;
+        this.signalDirection = 1;
+      }
+
+      draw() {
+        const avgActivation = (this.from.activation + this.to.activation) / 2;
+        const alpha = Math.max(0.02, this.weight * 0.35 + avgActivation * 0.25);
+        
+        ctx.beginPath();
+        ctx.moveTo(this.from.x, this.from.y);
+        ctx.lineTo(this.to.x, this.to.y);
+        
+        const lineWidth = 0.3 + this.weight * 1.8;
+        ctx.lineWidth = lineWidth;
+        
+        const hue = 170 + this.weight * 35;
+        ctx.strokeStyle = `hsla(${hue}, 100%, 60%, ${alpha})`;
+        ctx.stroke();
+
+        if (this.signalPos !== null) {
+          const x = this.from.x + (this.to.x - this.from.x) * this.signalPos;
+          const y = this.from.y + (this.to.y - this.from.y) * this.signalPos;
+          
+          const gradient = ctx.createRadialGradient(x, y, 0, x, y, 6);
+          gradient.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+          gradient.addColorStop(0.3, 'rgba(0, 255, 213, 0.7)');
+          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          
+          ctx.beginPath();
+          ctx.arc(x, y, 6, 0, Math.PI * 2);
+          ctx.fillStyle = gradient;
+          ctx.fill();
+        }
+      }
+    }
+
+    const neurons = [];
+    const synapses = [];
+
+    function initNetwork() {
+      neurons.length = 0;
+      synapses.length = 0;
+
+      for (let i = 0; i < config.nodeCount; i++) {
+        let x, y, valid;
+        let attempts = 0;
+        
+        do {
+          x = 40 + Math.random() * (width - 80);
+          y = 40 + Math.random() * (height - 80);
+          valid = true;
+          
+          for (const node of neurons) {
+            const dist = Math.hypot(node.x - x, node.y - y);
+            if (dist < 35) {
+              valid = false;
+              break;
+            }
+          }
+          attempts++;
+        } while (!valid && attempts < 30);
+
+        neurons.push(new Neuron(x, y));
+      }
+
+      for (let i = 0; i < neurons.length; i++) {
+        for (let j = i + 1; j < neurons.length; j++) {
+          const dist = Math.hypot(
+            neurons[i].x - neurons[j].x,
+            neurons[i].y - neurons[j].y
+          );
+
+          if (dist < config.connectionRadius) {
+            const initialWeight = config.minWeight + 
+              (1 - dist / config.connectionRadius) * 0.15;
+            
+            const synapse = new Synapse(neurons[i], neurons[j], initialWeight);
+            synapses.push(synapse);
+            neurons[i].connections.set(neurons[j], synapse);
+            neurons[j].connections.set(neurons[i], synapse);
+          }
+        }
+      }
+
+      <!-- updateStats(); -->
+    }
+
+    const waves = [];
+
+    class Wave {
+      constructor(x, y, strength = 1) {
+        this.x = x;
+        this.y = y;
+        this.radius = 0;
+        this.strength = strength;
+        this.speed = config.waveSpeed;
+      }
+
+      update(dt) {
+        this.radius += this.speed * dt;
+        this.strength *= 0.988;
+
+        const waveFrontWidth = 35;
+        for (const neuron of neurons) {
+          const dist = Math.hypot(neuron.x - this.x, neuron.y - this.y);
+          
+          if (dist > this.radius - waveFrontWidth && dist < this.radius + waveFrontWidth) {
+            const falloff = 1 - Math.abs(dist - this.radius) / waveFrontWidth;
+            const activation = this.strength * falloff * 0.7;
+            neuron.targetActivation = Math.max(neuron.targetActivation, activation);
+          }
+        }
+
+        return this.strength > 0.01 && this.radius < Math.max(width, height) * 1.2;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(0, 255, 213, ${this.strength * 0.12})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    }
+
+    function applyHebbianLearning(dt) {
+      for (const synapse of synapses) {
+        const coActivation = synapse.from.activation * synapse.to.activation;
+        
+        if (coActivation > config.activationThreshold) {
+          synapse.weight += config.hebbianRate * coActivation * dt * 10;
+          
+          if (Math.random() < coActivation * 0.25 && synapse.signalPos === null) {
+            synapse.signalPos = 0;
+            synapse.signalDirection = synapse.from.activation > synapse.to.activation ? 1 : -1;
+            if (synapse.signalDirection === -1) synapse.signalPos = 1;
+          }
+        } else {
+          synapse.weight -= config.decayRate * dt;
+        }
+        
+        synapse.weight = Math.max(config.minWeight, Math.min(config.maxWeight, synapse.weight));
+
+        if (synapse.signalPos !== null) {
+          synapse.signalPos += synapse.signalDirection * dt * 2.5;
+          if (synapse.signalPos < 0 || synapse.signalPos > 1) {
+            synapse.signalPos = null;
+          }
+        }
+      }
+    }
+
+    let mouseX = -1000, mouseY = -1000;
+    let lastMouseX = mouseX, lastMouseY = mouseY;
+    let lastWaveTime = 0;
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+
+      const moved = Math.hypot(mouseX - lastMouseX, mouseY - lastMouseY);
+      const now = performance.now();
+      
+      if (moved > 15 && now - lastWaveTime > 60) {
+        waves.push(new Wave(mouseX, mouseY, 0.9));
+        lastWaveTime = now;
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+      }
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      mouseX = -1000;
+      mouseY = -1000;
+    });
+
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      waves.push(new Wave(x, y, 1.8));
+    });
+
+    // Touch support for mobile
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      mouseX = touch.clientX - rect.left;
+      mouseY = touch.clientY - rect.top;
+
+      const moved = Math.hypot(mouseX - lastMouseX, mouseY - lastMouseY);
+      const now = performance.now();
+      
+      if (moved > 15 && now - lastWaveTime > 60) {
+        waves.push(new Wave(mouseX, mouseY, 0.9));
+        lastWaveTime = now;
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+      }
+    }, { passive: false });
+
+    canvas.addEventListener('touchstart', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+      waves.push(new Wave(x, y, 1.5));
+    });
+
+    function updateStats() {
+      document.getElementById('node-count').textContent = neurons.length;
+      document.getElementById('connection-count').textContent = synapses.length;
+      
+      const avgWeight = synapses.reduce((sum, s) => sum + s.weight, 0) / synapses.length;
+      document.getElementById('avg-weight').textContent = avgWeight.toFixed(2);
+    }
+
+    let lastTime = performance.now();
+
+    function animate(currentTime) {
+      const dt = Math.min((currentTime - lastTime) / 1000, 0.1);
+      lastTime = currentTime;
+
+      ctx.fillStyle = '#0d0d14';
+      ctx.fillRect(0, 0, width, height);
+
+      // Subtle grid
+      ctx.strokeStyle = 'rgba(40, 40, 60, 0.2)';
+      ctx.lineWidth = 0.5;
+      const gridSize = 60;
+      for (let x = 0; x < width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      for (let i = waves.length - 1; i >= 0; i--) {
+        if (!waves[i].update(dt)) {
+          waves.splice(i, 1);
+        } else {
+          waves[i].draw();
+        }
+      }
+
+      applyHebbianLearning(dt);
+
+      for (const synapse of synapses) {
+        synapse.draw();
+      }
+
+      for (const neuron of neurons) {
+        neuron.update(dt);
+        neuron.draw();
+      }
+
+      if (mouseX > 0 && mouseY > 0) {
+        const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 100);
+        gradient.addColorStop(0, 'rgba(0, 255, 213, 0.08)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.beginPath();
+        ctx.arc(mouseX, mouseY, 100, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+      }
+
+      <!-- if (Math.random() < 0.03) updateStats(); -->
+
+      requestAnimationFrame(animate);
+    }
+
+    initNetwork();
+    animate(performance.now());
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        resize();
+        initNetwork();
+      }, 250);
+    });
+  </script>
+</body>
+</html>
