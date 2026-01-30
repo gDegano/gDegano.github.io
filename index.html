@@ -44,6 +44,7 @@
       width: 100%;
       height: 100%;
       cursor: crosshair;
+	  touch-action: pan-y;
     }
 
     .header-overlay {
@@ -863,7 +864,7 @@
 
     // Touch support for mobile
     canvas.addEventListener('touchmove', (e) => {
-      e.preventDefault();
+      <!-- e.preventDefault(); -->
       const rect = canvas.getBoundingClientRect();
       const touch = e.touches[0];
       mouseX = touch.clientX - rect.left;
@@ -878,7 +879,7 @@
         lastMouseX = mouseX;
         lastMouseY = mouseY;
       }
-    }, { passive: false });
+    }, { passive: true }); <!-- { passive: false }); -->
 
     canvas.addEventListener('touchstart', (e) => {
       const rect = canvas.getBoundingClientRect();
