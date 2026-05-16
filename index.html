@@ -299,6 +299,8 @@
     }
 
     .project-card {
+      display: block;
+      text-decoration: none;
       background: rgba(20, 20, 30, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 4px;
@@ -351,7 +353,7 @@
       transition: gap 0.3s;
     }
 
-    .project-link:hover {
+    .project-card:hover .project-link {
       gap: 12px;
     }
 
@@ -519,49 +521,39 @@
 
     <div class="projects-grid">
 	
-      <article class="project-card">
-        <div class="project-icon">🧠</div>
+      <a class="project-card" href="project-icu-eeg.html">
         <h3 class="project-title">ICU-EEG Pattern Detection</h3>
         <p class="project-desc">
           Developing deep learning architectures to extract low-dimensional, clinically-grounded embeddings from high-density EEG to be used for ICU diagnostic.
         </p>
-        <a href="#" class="project-link">
+        <span class="project-link">
           View Project
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
-        </a>
-      </article>
+        </span>
+      </a>
 
-      <!-- <article class="project-card">
-        <div class="project-icon">⚡</div>
-        <h3 class="project-title">Project Two</h3>
-        <p class="project-desc">
-          Brief description of another project. Highlight what makes it 
-          interesting or unique.
-        </p>
-        <a href="#" class="project-link">
-          View Project
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </a>
-      </article>
+      <!--
+        TEMPLATE — to add a project:
+        1. Duplicate project-icu-eeg.html, rename it (e.g. project-NAME.html),
+           and edit its title/intro.
+        2. Copy the block below, update the title, description and href,
+           then remove the surrounding comment markers.
 
-      <article class="project-card">
-        <div class="project-icon">🎨</div>
-        <h3 class="project-title">Project Three</h3>
+      <a class="project-card" href="project-NAME.html">
+        <h3 class="project-title">Project Title</h3>
         <p class="project-desc">
-          Description of a creative or design-focused project. 
-          Show your range of skills.
+          Brief description of the project.
         </p>
-        <a href="#" class="project-link">
+        <span class="project-link">
           View Project
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
-        </a>
-      </article> -->
+        </span>
+      </a>
+      -->
     </div>
   </section>
 
