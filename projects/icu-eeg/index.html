@@ -3,7 +3,7 @@
   PROJECT PAGE TEMPLATE
   To add a new project: duplicate this whole folder (projects/icu-eeg/) and
   rename it (e.g. projects/NAME/). Then edit this index.html — the <title>,
-  the meta description, the intro and the media section — and drop the
+  the meta description, the intro and the details section — and drop the
   project's images alongside it. Finally, link to it from a project card
   in the site's root /index.html.
 -->
@@ -160,6 +160,26 @@
       letter-spacing: 0.03em;
     }
 
+    /* ===== DETAILS SECTION ===== */
+    .detail-section {
+      margin-top: 24px;
+    }
+
+    .detail-heading {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: #ffffff;
+      margin-bottom: 24px;
+    }
+
+    .detail-text {
+      color: #8a8a9a;
+      font-size: 1rem;
+      line-height: 1.9;
+      margin-bottom: 32px;
+    }
+
     /* ===== FOOTER ===== */
     footer {
       padding: 30px 5%;
@@ -167,6 +187,65 @@
       color: #6a6a7a;
       font-size: 0.8rem;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* ===== TOOLTIP (hover or tap) ===== */
+    /* Usage: <span class="tip" tabindex="0" data-tip="Your note here">visible text</span> */
+    .tip {
+      position: relative;
+      color: #00ffd5;
+      border-bottom: 1px dashed rgba(0, 255, 213, 0.55);
+      cursor: help;
+      outline: none;
+    }
+
+    .tip::after,
+    .tip::before {
+      position: absolute;
+      left: 50%;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.18s ease, visibility 0.18s ease;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .tip::after {
+      content: attr(data-tip);
+      bottom: calc(100% + 10px);
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: 260px;
+      padding: 10px 14px;
+      background: #14141e;
+      border: 1px solid rgba(0, 255, 213, 0.3);
+      border-radius: 4px;
+      color: #e8e8e8;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+      text-align: left;
+      text-transform: none;
+      white-space: normal;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+    }
+
+    .tip::before {
+      content: "";
+      bottom: calc(100% + 4px);
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: #14141e;
+    }
+
+    .tip:hover::after,
+    .tip:hover::before,
+    .tip:focus::after,
+    .tip:focus::before {
+      opacity: 1;
+      visibility: visible;
     }
   </style>
 </head>
@@ -192,17 +271,40 @@
       The goal of this project was to assess the performance of a lightweight CNN for the detection of abnormal EEG patterns in critical care settings.
     </p>
 
-    <figure class="media-figure">
-      <img class="media-img" src="imageLPD.gif" alt="LPD EEG pattern animation">
-      <figcaption class="media-caption">[ The CNN sees correctly the LPD and does so consistently over time. ]</figcaption>
-    </figure>
+    <section class="detail-section">
+      <h2 class="detail-heading">The Details</h2>
 
-    <figure class="media-figure">
-      <img class="media-img" src="imageSeizure.gif" alt="Seizure EEG pattern animation">
-      <figcaption class="media-caption">[ The CNN sees correctly the seizure and compared to a stable pattern like the LPD, it starts peaking after seizure onset. ]</figcaption>
-    </figure>
+      <p class="detail-text">
+        I will not go into many details regarding the training database and all the preprocessing steps, BUT a bunch of things are worth mentioning:
+        <br><br>
+        1. The CNN was trained on <span class="tip" tabindex="0" data-tip="This can be tecnically reduce but will require a retraining. it's on a to do list">19 channels</span>  so that it can be easily applied to the standard 10-20 EEG montage used in ICUs.
+        2. Six different patterns were included in the training (LPD, GPD, GRDA, LRDA, seizures and other) and the network was trained to output a probability for 50s windows of EEG.
+        3. The code is ready on GitHub but for hospital reasons I can only share it after a email request.
+        4. Chunks of ideas were developed from the work of <a href="https://www.kaggle.com/code/cdeotte/efficientnetb0-starter-lb-0-43#Kaggle-Spectrograms-vs.-EEG-Spectrograms" target="_blank" rel="noopener noreferrer">Chris Deotte</a>.
+        <br><br>
+      </p>
 
-    <span class="project-status">Status — work in progress</span>
+      <figure class="media-figure">
+        <img class="media-img" src="network_def.jpg" alt="CNN architecture diagram">
+        <figcaption class="media-caption">Pipeline used for training the CNN generating the 5 ensemble models. Each of the 5 CNN was a EffNet model B0 (the lightest of the family)</figcaption>
+      </figure>
+
+      <p class="detail-text">
+        The above figure shows that the input images was a concatenation of the spectrograms of the chains including <span class="tip" tabindex="0" data-tip="to see some details look here: https://www.learningeeg.com/montages-and-technical-components ">transverse and double banana montages</span>. Then a simple normalization was addedd and finally all was plugged in the CNN.
+      </p>
+
+      <figure class="media-figure">
+        <img class="media-img" src="imageLPD.gif" alt="LPD EEG pattern animation">
+        <figcaption class="media-caption"> The CNN sees correctly the LPD and does so consistently over time </figcaption>
+      </figure>
+
+      <figure class="media-figure">
+        <img class="media-img" src="imageSeizure.gif" alt="Seizure EEG pattern animation">
+        <figcaption class="media-caption">The CNN detection of a seizure. Compared to a stable pattern like the LPD we can see that the probability starts peaking only after seizure onset. -little side note- just before the seizure onset you can see a small bump of LPD detection... this is nicely consistent with a cortical buildup before the network spreading of the seizure</figcaption>
+      </figure>
+    </section>
+
+    <span class="project-status">Status — Published</span>
   </main>
 
   <footer>
