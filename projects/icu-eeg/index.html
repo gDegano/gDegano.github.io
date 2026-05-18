@@ -302,7 +302,7 @@
       </p>
       <ol class="detail-list">
         <li>The CNN was trained on <span class="tip" tabindex="0">19 channels<span class="tip-box">This can be tecnically reduced... but will require a retraining. It's on a to do list</span></span>  so that it can be easily applied to the standard 10-20 EEG montage used in ICUs.</li>
-        <li>Six different patterns were included in the training (LPD, GPD, GRDA, LRDA, seizures and other) and the network was trained to output a probability for 50s windows of EEG.</li>
+        <li>Six different patterns were included in the training (LPD, GPD, GRDA, LRDA, seizures and other) and the network was trained to output a probability for <span class="tip" tabindex="0">50s windows<span class="tip-box">a simple sliding window can be used to increase temporal resolution... given that you know you will induce quite some autocorrelation ofc</span></span> of EEG.</li>
         <li>The code is ready on GitHub but for hospital reasons I can only share it after a email request.</li>
         <li>Chunks of ideas were developed from the work of <a href="https://www.kaggle.com/code/cdeotte/efficientnetb0-starter-lb-0-43#Kaggle-Spectrograms-vs.-EEG-Spectrograms" target="_blank" rel="noopener noreferrer">Chris Deotte</a>.</li>
       </ol>
@@ -313,7 +313,9 @@
       </figure>
 
       <p class="detail-text">
-        The above figure shows that the input images was a concatenation of the spectrograms of the chains including <span class="tip" tabindex="0">transverse and double banana montages<span class="tip-box">to see some details look <a href="https://www.learningeeg.com/montages-and-technical-components" target="_blank" rel="noopener">here</a></span></span>. Then a simple normalization was addedd and finally all was plugged in the CNN.
+        The above figure shows that the input images were a concatenation of the spectrograms of the chains including <span class="tip" tabindex="0">transverse and double banana montages<span class="tip-box">to see some details look <a href="https://www.learningeeg.com/montages-and-technical-components" target="_blank" rel="noopener">here</a></span></span>. Then a simple normalization was addedd and finally all was plugged in the CNN.
+        The performance obtained was pretty decent cosidering the numbers of paramters of the EffNetB0. we got AUROC score of 93.52 (94.18, 92.86)% for SZ, 91.48 (92.19, 90.77)% for LPD, 93.67 (94.31, 93.02)% for GPD, 87.00 (87.93, 86.06)% for LRDA, 89.15 (89.89, 88.42)% for GRDA, and 88.16 (88.83, 87.49)% for other. The score for the AUPR was instead of 83.62 (84.96, 82.28)% for SZ, 73.94 (75.79, 72.10)% for LPD, 72.50 (74.59, 70.41)% for GPD, 29.36 (31.26, 27.46)% for LRDA, 52.58 (55.02, 50.15)% for GRDA, and 78.71 (79.92, 77.50)% for other.
+        BUT... what was remarcably good was the consistency in terms of temporal resolution. As mentioned before you can add a sliding window of choice while keeping a fixed windows of 50s for the prediction and the CNN was performing quite well at detecting onsets of seizures even if the trining was basically done on only static frames. I think the main reason for this is the fact the DB is quite good in terms of SNR, especially for the instances that have at least 20 annotations. Anyway, this is a very good news for the future of this kind of models... especially if one is interested in low-power/low-resource devices.
       </p>
 
       <figure class="media-figure">
