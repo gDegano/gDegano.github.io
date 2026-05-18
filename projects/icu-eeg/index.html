@@ -180,6 +180,18 @@
       margin-bottom: 32px;
     }
 
+    .detail-list {
+      color: #8a8a9a;
+      font-size: 1rem;
+      line-height: 1.9;
+      margin: 0 0 32px;
+      padding-left: 1.5em;
+    }
+
+    .detail-list li {
+      margin-bottom: 6px;
+    }
+
     /* ===== FOOTER ===== */
     footer {
       padding: 30px 5%;
@@ -287,13 +299,13 @@
 
       <p class="detail-text">
         I will not go into many details regarding the training database and all the preprocessing steps, BUT a bunch of things are worth mentioning:
-        <ol>
+      </p>
+      <ol class="detail-list">
         <li>The CNN was trained on <span class="tip" tabindex="0">19 channels<span class="tip-box">This can be tecnically reduced... but will require a retraining. It's on a to do list</span></span>  so that it can be easily applied to the standard 10-20 EEG montage used in ICUs.</li>
         <li>Six different patterns were included in the training (LPD, GPD, GRDA, LRDA, seizures and other) and the network was trained to output a probability for 50s windows of EEG.</li>
         <li>The code is ready on GitHub but for hospital reasons I can only share it after a email request.</li>
         <li>Chunks of ideas were developed from the work of <a href="https://www.kaggle.com/code/cdeotte/efficientnetb0-starter-lb-0-43#Kaggle-Spectrograms-vs.-EEG-Spectrograms" target="_blank" rel="noopener noreferrer">Chris Deotte</a>.</li>
-        </ol>
-      </p>
+      </ol>
 
       <figure class="media-figure">
         <img class="media-img" src="network_def.jpg" alt="CNN architecture diagram">
