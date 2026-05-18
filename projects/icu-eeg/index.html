@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <!--
   PROJECT PAGE TEMPLATE
-  To add a new project: duplicate this file, rename it (e.g. project-NAME.html),
-  then edit the <title>, the meta description, and the three .project-* blocks
-  below. Finally, link to it from a project card in index.html.
+  To add a new project: duplicate this whole folder (projects/icu-eeg/) and
+  rename it (e.g. projects/NAME/). Then edit this index.html — the <title>,
+  the meta description, the intro and the media section — and drop the
+  project's images alongside it. Finally, link to it from a project card
+  in the site's root /index.html.
 -->
 <html lang="en">
 <head>
@@ -102,6 +104,28 @@
       margin-bottom: 40px;
     }
 
+    .article-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      margin-bottom: 32px;
+      background: transparent;
+      border: 1px solid rgba(0, 255, 213, 0.5);
+      border-radius: 2px;
+      color: #00ffd5;
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+
+    .article-link:hover {
+      background: rgba(0, 255, 213, 0.1);
+      gap: 14px;
+    }
+
     .project-status {
       display: inline-block;
       font-size: 0.75rem;
@@ -112,6 +136,28 @@
       background: rgba(0, 255, 213, 0.05);
       border: 1px solid rgba(0, 255, 213, 0.2);
       border-radius: 2px;
+    }
+
+    /* ===== FIGURES ===== */
+    .media-figure {
+      margin: 0 0 40px;
+    }
+
+    .media-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      background: #000;
+    }
+
+    .media-caption {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: #6a6a7a;
+      letter-spacing: 0.03em;
     }
 
     /* ===== FOOTER ===== */
@@ -126,16 +172,36 @@
 </head>
 <body>
   <nav>
-    <a href="index.html" class="nav-logo">GD</a>
-    <a href="index.html#projects" class="back-link">← Back to Hub</a>
+    <a href="../../index.html" class="nav-logo">GD</a>
+    <a href="../../index.html#projects" class="back-link">← Back to Hub</a>
   </nav>
 
   <main class="project-page">
     <p class="project-label">Project</p>
     <h1 class="project-heading">ICU-EEG Pattern Detection</h1>
+
+    <a class="article-link" href="https://onlinelibrary.wiley.com/doi/full/10.1002/acn3.70164" target="_blank" rel="noopener">
+      Read the publication
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M7 17L17 7M17 7H8M17 7V16"/>
+      </svg>
+    </a>
+
     <p class="project-intro">
-      Developing deep learning architectures to extract low-dimensional, clinically-grounded embeddings from high-density EEG to be used for ICU diagnostic.
+
+      The goal of this project was to assess the performance of a lightweight CNN for the detection of abnormal EEG patterns in critical care settings.
     </p>
+
+    <figure class="media-figure">
+      <img class="media-img" src="imageLPD.gif" alt="LPD EEG pattern animation">
+      <figcaption class="media-caption">[ The CNN sees correctly the LPD and does so consistently over time. ]</figcaption>
+    </figure>
+
+    <figure class="media-figure">
+      <img class="media-img" src="imageSeizure.gif" alt="Seizure EEG pattern animation">
+      <figcaption class="media-caption">[ The CNN sees correctly the seizure and compared to a stable pattern like the LPD, it starts peaking after seizure onset. ]</figcaption>
+    </figure>
+
     <span class="project-status">Status — work in progress</span>
   </main>
 
