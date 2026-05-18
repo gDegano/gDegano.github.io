@@ -190,7 +190,8 @@
     }
 
     /* ===== TOOLTIP (hover or tap) ===== */
-    /* Usage: <span class="tip" tabindex="0" data-tip="Your note here">visible text</span> */
+    /* Usage: <span class="tip" tabindex="0">visible text<span class="tip-box">your note</span></span> */
+    /* A link works inside the box: <span class="tip-box">see <a href="URL" target="_blank" rel="noopener">here</a></span> */
     .tip {
       position: relative;
       color: #00ffd5;
@@ -199,19 +200,9 @@
       outline: none;
     }
 
-    .tip::after,
-    .tip::before {
+    .tip-box {
       position: absolute;
       left: 50%;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.18s ease, visibility 0.18s ease;
-      pointer-events: none;
-      z-index: 100;
-    }
-
-    .tip::after {
-      content: attr(data-tip);
       bottom: calc(100% + 10px);
       transform: translateX(-50%);
       width: max-content;
@@ -230,20 +221,40 @@
       text-transform: none;
       white-space: normal;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.18s ease, visibility 0.18s ease;
+      z-index: 100;
     }
 
-    .tip::before {
+    /* arrow */
+    .tip-box::before {
       content: "";
-      bottom: calc(100% + 4px);
+      position: absolute;
+      left: 50%;
+      top: 100%;
       transform: translateX(-50%);
       border: 6px solid transparent;
       border-top-color: #14141e;
     }
 
-    .tip:hover::after,
-    .tip:hover::before,
-    .tip:focus::after,
-    .tip:focus::before {
+    /* invisible bridge: lets the cursor travel from the text into the box */
+    .tip-box::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 12px;
+    }
+
+    .tip-box a {
+      color: #00ffd5;
+      text-decoration: underline;
+    }
+
+    .tip:hover .tip-box,
+    .tip:focus-within .tip-box {
       opacity: 1;
       visibility: visible;
     }
@@ -276,12 +287,12 @@
 
       <p class="detail-text">
         I will not go into many details regarding the training database and all the preprocessing steps, BUT a bunch of things are worth mentioning:
-        <br><br>
-        1. The CNN was trained on <span class="tip" tabindex="0" data-tip="This can be tecnically reduce but will require a retraining. it's on a to do list">19 channels</span>  so that it can be easily applied to the standard 10-20 EEG montage used in ICUs.
-        2. Six different patterns were included in the training (LPD, GPD, GRDA, LRDA, seizures and other) and the network was trained to output a probability for 50s windows of EEG.
-        3. The code is ready on GitHub but for hospital reasons I can only share it after a email request.
-        4. Chunks of ideas were developed from the work of <a href="https://www.kaggle.com/code/cdeotte/efficientnetb0-starter-lb-0-43#Kaggle-Spectrograms-vs.-EEG-Spectrograms" target="_blank" rel="noopener noreferrer">Chris Deotte</a>.
-        <br><br>
+        <ol>
+        <li>The CNN was trained on <span class="tip" tabindex="0">19 channels<span class="tip-box">This can be tecnically reduced... but will require a retraining. It's on a to do list</span></span>  so that it can be easily applied to the standard 10-20 EEG montage used in ICUs.</li>
+        <li>Six different patterns were included in the training (LPD, GPD, GRDA, LRDA, seizures and other) and the network was trained to output a probability for 50s windows of EEG.</li>
+        <li>The code is ready on GitHub but for hospital reasons I can only share it after a email request.</li>
+        <li>Chunks of ideas were developed from the work of <a href="https://www.kaggle.com/code/cdeotte/efficientnetb0-starter-lb-0-43#Kaggle-Spectrograms-vs.-EEG-Spectrograms" target="_blank" rel="noopener noreferrer">Chris Deotte</a>.</li>
+        </ol>
       </p>
 
       <figure class="media-figure">
@@ -290,7 +301,7 @@
       </figure>
 
       <p class="detail-text">
-        The above figure shows that the input images was a concatenation of the spectrograms of the chains including <span class="tip" tabindex="0" data-tip="to see some details look here: https://www.learningeeg.com/montages-and-technical-components ">transverse and double banana montages</span>. Then a simple normalization was addedd and finally all was plugged in the CNN.
+        The above figure shows that the input images was a concatenation of the spectrograms of the chains including <span class="tip" tabindex="0">transverse and double banana montages<span class="tip-box">to see some details look <a href="https://www.learningeeg.com/montages-and-technical-components" target="_blank" rel="noopener">here</a></span></span>. Then a simple normalization was addedd and finally all was plugged in the CNN.
       </p>
 
       <figure class="media-figure">
